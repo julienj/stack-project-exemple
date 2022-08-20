@@ -6,27 +6,34 @@ stacks:
       extensions: [ apcu, bcmath, imagick, gd, intl, ldap, mysql, pgsql, redis]
     script: |
       echo "A build command for php"
+  node:
+    template: node:16
+    recipes:
+      composer: 2
+      extensions: [ apcu, bcmath, imagick, gd, intl, ldap, mysql, pgsql, redis]
+    script: |
+      echo "A build command for php"
+
 
 apps: 
   api: 
-    basepath: /
+    basepath: /api
     build:
       - stack: php
         script: |
-          echo "step 1"
-      - stack: php
-        script: |
-          echo "step 2"
+          composer install
+          composer dump-autoload --no-dev --classmap-authoritative
 
     runtime:
       stack: php
 
-#      web:
-#        locations:
-#            handle:
-#              "/":
-#                  root: ~
-#                  fpm: true
-#                  encode: [ zstd, gzip ]
-#                  file_server: true
-         
+  frontend: 
+    basepath: /frontend
+    build:
+      - stack: node
+        script: |
+          echo "install node"
+
+    runtime:
+      stack: node
+
