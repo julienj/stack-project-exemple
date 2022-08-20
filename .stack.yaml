@@ -11,23 +11,22 @@ apps:
   api: 
     basepath: /
     build:
-      steps:
-        exemple:
-          stack: php
-          script: |
-            php -v
+      - stack: php
+        script: |
+          echo "step 1"
+      - stack: node
+        script: |
+          echo "step 2"
 
     runtime:
       stack: php
-      hooks:
-        post_deploy: ~
 
-      web:
-        locations:
-            handle:
-              "/":
-                  root: ~
-                  fpm: true
-                  encode: [ zstd, gzip ]
-                  file_server: true
+#      web:
+#        locations:
+#            handle:
+#              "/":
+#                  root: ~
+#                  fpm: true
+#                  encode: [ zstd, gzip ]
+#                  file_server: true
          
