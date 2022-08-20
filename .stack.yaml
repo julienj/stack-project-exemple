@@ -4,7 +4,7 @@ stacks:
     recipes:
       composer: 2
       extensions: [ apcu, bcmath, imagick, gd, intl, ldap, mysql, pgsql, redis]
-    scripts: |
+    script: |
       echo "A build command for php"
 
 apps: 
