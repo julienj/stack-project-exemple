@@ -1,39 +1,41 @@
 stacks:
   php:
-    template: php:8.1
-    recipes:
-      composer: 2
-      extensions: [ apcu, bcmath, imagick, gd, intl, ldap, mysql, pgsql, redis]
-    script: |
-      echo "A build command for php"
+    use: php
+    with:
+      php-version: 8.1
+      extensions: apcu, bcmath, imagick, gd, intl, ldap, mysql, pgsql, redis
+      tools:  composer:2
   node:
-    template: node:16
-    recipes:
-      composer: 2
-      extensions: [ apcu, bcmath, imagick, gd, intl, ldap, mysql, pgsql, redis]
-    script: |
-      echo "A build command for php"
+    use: node
+    with:
+      node-version: 16
+      tools:  yarn:v1.22.19
 
-
-apps: 
-  api: 
+apps:
+  api:
     basepath: /api
+    stack: php
+    mounts:
+      media: /media
+      media-cache: /public/media
     build:
       - stack: php
-        script: |
-          composer install
-          composer dump-autoload --no-dev --classmap-authoritative
-
-    runtime:
-      stack: php
-
-  frontend: 
-    basepath: /frontend
+        scripts:
+          - composer install
+          - composer dump-autoload --no-dev --classmap-authoritative
+      - stack: node
+        scripts:
+          - yarn install
+          - yarn build
+    
+  frontend:
+    basepath: /app
+    stack: node
+    mounts:
+      media: /media
+      media-cache: /public/media
     build:
       - stack: node
-        script: |
-          echo "install node"
-
-    runtime:
-      stack: node
-
+        scripts:
+          - yarn install
+          - yarn build
