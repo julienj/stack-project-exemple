@@ -1,41 +1,47 @@
-stacks:
-  php:
-    use: php
-    with:
-      php-version: 8.1
-      extensions: apcu, bcmath, imagick, gd, intl, ldap, mysql, pgsql, redis
-      tools:  composer:2
-  node:
-    use: node
-    with:
-      node-version: 16
-      tools:  yarn:v1.22.19
+build :
+  - image: php:8.1
+    basepath: /api
+    scripts:
+      - composer install
+      - composer dump-autoload --no-dev --classmap-authoritative
+  - image: node:16
+    basepath: /api
+    scripts:
+      - yarn install
+      - yarn build
+
+mounts:
+  media: /app/media
+  media-cache: /app/public/media
+
+#hooks:
+#  postDeploy:
+#    - image: php:8.1
+#      basepath: /api
+#      scripts:
+#        - ./bin/console d:m:m
 
 apps:
   api:
+    image: php:8.1
     basepath: /api
-    stack: php
-    mounts:
-      media: /media
-      media-cache: /public/media
-    build:
-      - stack: php
-        scripts:
-          - composer install
-          - composer dump-autoload --no-dev --classmap-authoritative
-      - stack: node
-        scripts:
-          - yarn install
-          - yarn build
-    
+    proxy:
+      type: caddy
+      caddyfile: .stack.io/Caddyfile
   frontend:
+    image: node:16
     basepath: /app
-    stack: node
-    mounts:
-      media: /media
-      media-cache: /public/media
-    build:
-      - stack: node
-        scripts:
-          - yarn install
-          - yarn build
+    command: node server.js -p 9000
+
+workers:
+  queue:
+    image: php:8.1
+    basepath: /api
+    command: ./bin/console my:cmd
+
+tasks:
+  index:
+    image: php:8.1
+    basepath: /api
+    spec: '*/19 * * * *'
+    command: ./bin/console app:index
