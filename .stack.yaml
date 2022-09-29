@@ -1,10 +1,10 @@
 build :
-  - image: php:8.1
+  - image: registry.mezcalito.fr/docker/php:8.1-only
     basepath: /api
     scripts:
       - composer install
       - composer dump-autoload --no-dev --classmap-authoritative
-  - image: node:16
+  - image: registry.mezcalito.fr/docker/node:16
     basepath: /api
     scripts:
       - yarn install
@@ -16,14 +16,14 @@ mounts:
 
 #hooks:
 #  postDeploy:
-#    - image: php:8.1
+#    - image: registry.mezcalito.fr/docker/php:8.1-only
 #      basepath: /api
 #      scripts:
 #        - ./bin/console d:m:m
 
 apps:
   api:
-    image: php:8.1
+    image: registry.mezcalito.fr/docker/php:8.1-only
     basepath: /api
     proxy:
       type: caddy
@@ -35,13 +35,13 @@ apps:
 
 workers:
   queue:
-    image: php:8.1
+    image: registry.mezcalito.fr/docker/php:8.1-only
     basepath: /api
     command: ./bin/console my:cmd
 
 tasks:
   index:
-    image: php:8.1
+    image: registry.mezcalito.fr/docker/php:8.1-only
     basepath: /api
     spec: '*/19 * * * *'
     command: ./bin/console app:index
