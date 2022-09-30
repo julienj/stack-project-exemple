@@ -1,11 +1,11 @@
 build :
   - image: registry.mezcalito.fr/julien.jacottet/k8s-stack-images/php:8.1-fpm
-    scripts: |
+    script: |
       cd api
       composer install
       composer dump-autoload --no-dev --classmap-authoritative
   - image: node:16
-    scripts: |
+    script: |
       cd frontend
       yarn install
       yarn build
