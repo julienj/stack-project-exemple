@@ -4,11 +4,11 @@ build :
       cd api
       composer install
       composer dump-autoload --no-dev --classmap-authoritative
-  - image: node:16
-    script: |
-      cd frontend
-      yarn install
-      yarn build
+#  - image: node:16
+#    script: |
+#      cd frontend
+#      yarn install
+#      yarn build
 
 mounts:
   media: /app/media
