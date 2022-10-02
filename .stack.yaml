@@ -28,10 +28,10 @@ apps:
     proxy:
       type: caddy
       caddyfile: .stack.io/Caddyfile
-  frontend:
-    image: node:16
-    basepath: /app
-    command: node server.js -p 9000
+#  frontend:
+#    image: node:16
+#    basepath: /app
+#    command: node server.js -p 9000
 
 workers:
   queue:
